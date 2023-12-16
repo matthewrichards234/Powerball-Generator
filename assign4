@@ -1,0 +1,93 @@
+//Matthew Richards
+//10/30/2023
+//Assign4
+
+#include <iostream>
+#include <ctime> 
+#include <cstdlib>
+
+using namespace std;
+const int WHITEBALLS = 69;
+const int WHITEPICKS = 5;
+const int REDBALLS = 26;
+
+void cageOfBalls(int wbArr[]);
+void pickedBalls(int arr[], int wbArr[], int size); 
+int powerball();
+void selectionSort(int array[], int size);
+void packArray(int arr[], int size, int index); 
+
+
+int main() {
+    
+  int wbArr[WHITEBALLS];
+  int pickedArr[WHITEPICKS];
+    
+  int userInput;
+  
+  srand(time(NULL));
+  
+  cout << "How many games would you like to play?: ";
+  cin >> userInput;
+  for(int count = 0; count < userInput; count++) {
+    cageOfBalls(wbArr);
+    pickedBalls(pickedArr, wbArr, WHITEPICKS);
+    int pb = powerball();
+    selectionSort(pickedArr, WHITEPICKS);
+    
+    // Print the picked numbers and the powerball number
+    cout << "White ball numbers: ";
+    for (int i = 0; i < WHITEPICKS; i++) {
+        cout << pickedArr[i] << " ";
+    }
+    cout << "Powerball number: " << pb << endl;
+  }
+  return 0;
+}
+
+void cageOfBalls(int wbarr[]){ 
+  //Add balls to array (filling cage with white balls)
+  for(int count = 0; count < WHITEBALLS; count++) {
+    wbarr[count] = count + 1;
+  }
+}
+
+void pickedBalls(int pickedArr[], int wbArr[], int size){
+  for(int count = 0; count < size; count++) {
+    //add to pickedArr with random
+    int x = rand()%(WHITEBALLS-count); //subtract 'count' to avoid picking the same ball twice
+    pickedArr[count] = wbArr[x];
+    packArray(wbArr, WHITEBALLS-count, x); //Number of white balls decreasing by count
+  }
+}
+
+void packArray(int arr[], int size, int index) { 
+  for (int count = index; count < size - 1; count++){ //avoid overstepping array boundary
+    arr[count] = arr[count + 1]; //overwrites element at the index to 'pack' array
+  }
+}
+
+int powerball() {
+  int pb_val = rand()%REDBALLS+1;
+  //pb_valmin = 1
+  //pb_valmax = 26;
+  return pb_val;
+}
+
+void selectionSort(int array[], int size){
+  int startScan, minIndex, minValue;
+
+  for(startScan = 0; startScan < (size - 1); startScan++) {
+    minIndex = startScan;
+    minValue = array[startScan];
+
+    for(int index = startScan + 1; index < size; index++) {
+      if(array[index] < minValue) {
+        minValue = array[index];
+        minIndex = index;
+      }
+    }
+    array[minIndex] = array[startScan];
+    array[startScan] = minValue;
+  }
+}
